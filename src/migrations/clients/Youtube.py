@@ -19,6 +19,7 @@ class Client:
         print(Fore.BLUE + 'Initializing Youtube API client.' + Style.RESET_ALL)
         self.client = None
 
+    # AUTHENTICATION
     def authenticate(self):
         """Set up and authenticate youtube client"""
         print('Running OAuth script.')
@@ -83,18 +84,19 @@ class Client:
                         creds = flow.run_console()
                     else:
                         print(Fore.GREEN + 'Successfully authenticated!' + Style.RESET_ALL)
-                    # Save the credentials for the next run
-                    print(Fore.YELLOW + 'Creds saved to ./youtube_token.pickle for future usage.' + Style.RESET_ALL)
-                    with open('youtube_token.pickle', 'wb') as token:
-                        pickle.dump(creds, token)
+            # Save the credentials for the next run
+            print('Creds saved to ./youtube_token.pickle for future usage.')
+            with open('youtube_token.pickle', 'wb') as token:
+                pickle.dump(creds, token)
         print(Fore.GREEN + 'Creds loaded.' + Style.RESET_ALL)
         # Build and return authenticated client           
         client = googleapiclient.discovery.build(
                         api_service_name, api_version, credentials=creds
         )
-        print(Fore.GREEN + 'Youtube API client successfully initialized.' + Style.RESET_ALL)
+        print(Fore.GREEN + 'Youtube API client successfully initialized.\n' + Style.RESET_ALL)
         self.client = client
 
+    # API CALLS
     def get_all_playlists(self):
         print('Fetching your Youtube playlists...', end=" ")
         try:
@@ -108,7 +110,7 @@ class Client:
             print(Style.BRIGHT + Back.RED + Fore.WHITE + 'ERROR:' + Style.RESET_ALL)
             raise RequestError(err.resp.status, err.content.decode('utf-8'))
         else:
-            print(Fore.GREEN + 'Success.' + Style.RESET_ALL)
+            print(Fore.GREEN + 'Success.\n' + Style.RESET_ALL)
             return response
 
     def get_playlist_items(self, id):        
