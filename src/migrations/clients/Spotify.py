@@ -85,6 +85,7 @@ class Client:
                 #         pickle.dump(creds, token)
                 # print(Fore.GREEN + 'Creds loaded.' + Style.RESET_ALL)
     def _load_secrets(self):
+        """Load the client secrets file to the class object or raise error"""
         client_secrets_file = "./spotify_client_secret.json"
         try:
             with open(client_secrets_file) as f:
@@ -103,6 +104,10 @@ class Client:
             self.secrets = client_secrets
 
     def _get_auth_uri(self):
+        """
+        Use the client secrets file to create the auth URI for the initial GET request.
+        The user will navigate to this link and retreive the URL redirect.
+        """
         payload = {
             'client_id': self.secrets['client_id'],
             'redirect_uri': self.secrets['redirect_uri'],
@@ -112,6 +117,11 @@ class Client:
         return self.base_auth_URI + urlencode(payload)
     
     def _get_auth_code_from_redirectURL(self, auth_uri):
+        """
+        Open web browser and direct user to login page based on their secrets file.
+        Prompt the user to copy and paste the URL from when they're redirected back into the terminal
+        Parse out the auth_code and store it in class object
+        """
         print('You will sent to a spotify login page to authenticate this app. Log in, do not close the page, and come back here.')
         print(Fore.BLUE + 'Redirecting in 5 seconds...' + Style.RESET_ALL)
         time.sleep(5)
@@ -121,6 +131,7 @@ class Client:
         self.auth_code = urllib.parse.parse_qs(parsedURI.query)['code'][0]
         
     def _request_tokens(self):
+        """get access and refresh tokens from Spotify API using auth_code"""
         # params
         payload = {
             'grant_type': "authorization_code",
@@ -140,6 +151,7 @@ class Client:
         return creds
     
     def _refresh_token(self):
+        """Request new token to replace expired one"""
         pass
 
     
