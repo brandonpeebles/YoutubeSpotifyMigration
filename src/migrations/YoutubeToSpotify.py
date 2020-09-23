@@ -22,7 +22,7 @@ class Migrator:
             {
                 'type': 'list',
                 'name': 'selectedPlaylist',
-                'message': 'From which playlist would you like to extract songs to transfer to Spotify?',
+                'message': 'Which Youtube playlist would you like to transfer to Spotify?',
                 'choices': [{'value': idx, 'name': item["snippet"]["title"]} for idx, item in enumerate(playlists["items"])]
             }
         ]
