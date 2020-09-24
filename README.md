@@ -36,7 +36,8 @@ To get started, you'll need to obtain the varous API keys, client IDs, secrets, 
 * Spotify API
 * OAuth 2.0
 * Pickle
-* Requests
+* Requests  
+* PyInquirer
 
 ## Author
 Brandon Peebles
