@@ -3,7 +3,7 @@ import src.migrations.clients.Spotify as Spotify
 from pprint import pprint
 from PyInquirer import prompt, Separator
 from examples import custom_style_2
-import sys, json
+import sys, json, time
 from colorama import Fore, Back, Style
 
 class Migrator:
@@ -87,6 +87,7 @@ class Migrator:
             else:
                 print(Fore.RED + "No match found." + Style.RESET_ALL)
             self._songs.append(song)
+        print()
         return no_matches_found == False
 
     def _confirm_spotify_matches(self):
@@ -106,9 +107,9 @@ class Migrator:
                         # 'value': idx, causes bug where 'checked' is ignored -- will parse index out of name
                         'name': (str(idx + 1) + ': ' + song['spotify_match']['artists'][0]['name'] + ' - ' + song['spotify_match']['name'] 
                                 if song['spotify_match'] 
-                                else str(idx + 1) + ': ' + song['youtube_title'] + ' (No match found)'),
+                                else str(idx + 1) + ': ' + song['youtube_title']),
                         'checked': True if song['spotify_match'] is not None else False,
-                        'disabled': False if song['spotify_match'] is not None else True
+                        'disabled': False if song['spotify_match'] is not None else "No match found"
                     } for idx, song in enumerate(self._songs)
                 ],
                 'validate': lambda answer: 'You must choose at least one song to transfer.' \

@@ -97,10 +97,12 @@ class Client:
         )
         print(Fore.GREEN + 'Youtube API client successfully initialized.\n' + Style.RESET_ALL)
         self.client = client
+        time.sleep(1)
 
     # API CALLS
     def get_all_playlists(self):
         print('Fetching your Youtube playlists...', end=" ")
+        time.sleep(1)
         try:
             request = self.client.playlists().list(
                 part="snippet,contentDetails",

@@ -55,7 +55,7 @@ class Client:
         self.creds = creds
         print(Fore.GREEN + 'Creds loaded.' + Style.RESET_ALL)
         print(Fore.GREEN + 'Spotify API client successfully initialized.\n' + Style.RESET_ALL)
-
+        time.sleep(1)
 
     def _run_manual_auth_code_flow(self):
         """
