@@ -26,7 +26,7 @@ class Migrator:
             print(Style.NORMAL + Fore.RED + 'No matches found. Terminating...' + Style.RESET_ALL)
             sys.exit()
         uri_list = self._confirm_spotify_matches()
-        self._transfer_songs(uri_list)
+        self._transfer_songs(uri_list, youtube_playlist['title'])
     
     # HELPER METHODS
     def _get_playlist_from_input(self):
@@ -47,7 +47,10 @@ class Migrator:
         answer = prompt(question, style=custom_style_2)
         selectedIndex = answer['selectedPlaylist']
         selectedPlaylistId = playlists['items'][selectedIndex]['id']
-        return self.YoutubeAPI.get_playlist_items(selectedPlaylistId)           # return all vids for selected playlist
+        selectedPlaylistTitle = playlists['items'][selectedIndex]['snippet']['title']
+        playlist_items = self.YoutubeAPI.get_playlist_items(selectedPlaylistId)          
+        playlist_items['title'] = selectedPlaylistTitle                         # add playlist title onto the obj
+        return playlist_items
         
     def _get_spotify_matches(self, items):
         """
@@ -128,7 +131,7 @@ class Migrator:
             selected_indices.append(original_idx)
         return [self._songs[i]['spotify_match']['uri'] for i in selected_indices]
         
-    def _transfer_songs(self, song_list):
+    def _transfer_songs(self, song_list, youtube_playlist_title):
         question = [                                                            # prompt user to select one
             {
                 'type': 'list',
@@ -151,7 +154,7 @@ class Migrator:
                     'type': 'input',
                     'name': 'new_playlist_name',
                     'message': 'Enter a name for your new playlist:',
-                    'default': 'New Playlist From Youtube',
+                    'default': youtube_playlist_title,
                     'validate': lambda answer: 'You must enter a name for your playlist.' \
                     if len(answer) == 0 else True
                 }

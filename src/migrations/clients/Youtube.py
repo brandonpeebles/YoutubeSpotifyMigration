@@ -107,10 +107,22 @@ class Client:
         try:
             request = self.client.playlists().list(
                 part="snippet,contentDetails",
-                maxResults=25,
+                maxResults=50,
                 mine=True
             )
             response = request.execute()
+            nextPageToken = response.get('nextPageToken', None)
+            while nextPageToken is not None:
+                time.sleep(1)
+                request = self.client.playlists().list(
+                    part="snippet,contentDetails",
+                    maxResults=50,
+                    playlistId=id,
+                    pageToken=nextPageToken
+                )
+                nextResponse = request.execute()
+                response['items'].extend(nextResponse['items'])
+                nextPageToken = nextResponse.get('nextPageToken', None)
         except googleapiclient.errors.HttpError as err:
             print(Style.BRIGHT + Back.RED + Fore.WHITE + 'ERROR:' + Style.RESET_ALL)
             raise RequestError(err.resp.status, err.content.decode('utf-8'))
@@ -123,10 +135,22 @@ class Client:
         try: 
             request = self.client.playlistItems().list(
                 part="snippet,contentDetails",
-                maxResults=25,
+                maxResults=50,
                 playlistId=id
             )
             response = request.execute()
+            nextPageToken = response.get('nextPageToken', None)
+            while nextPageToken is not None:
+                time.sleep(1)
+                request = self.client.playlistItems().list(
+                    part="snippet,contentDetails",
+                    maxResults=50,
+                    playlistId=id,
+                    pageToken=nextPageToken
+                )
+                nextResponse = request.execute()
+                response['items'].extend(nextResponse['items'])
+                nextPageToken = nextResponse.get('nextPageToken', None)
         except googleapiclient.errors.HttpError as err:
             print(Style.BRIGHT + Back.RED + Fore.WHITE + 'ERROR' + Style.RESET_ALL)
             raise RequestError(err.resp.status, err.content.decode('utf-8'))

@@ -237,7 +237,7 @@ class Client:
         """Fetch and return all playlists associated with authenticated user"""
         print(f"\nFetching your Spotify playlists...", end=" ")
         # build and execute request
-        request_url = "https://api.spotify.com/v1/me/playlists"
+        request_url = "https://api.spotify.com/v1/me/playlists?limit=50"
         headers = {
                 "Content-Type": "application/json",
                 "Authorization": f"Bearer {self.creds.access_token()}"
