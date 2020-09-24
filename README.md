@@ -25,7 +25,8 @@ To get started, you'll need to obtain the varous API keys, client IDs, secrets, 
 **Youtube (Google)**  
 [insert instructions and screenshots here]  
   
-**Spotify**
+**Spotify**  
+[insert instructions and screenshots here]
 
 ## Built with
 * Python 3
