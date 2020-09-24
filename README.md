@@ -3,6 +3,17 @@
 
 User-friendly command line interface written in Python for migrating playlists between Youtube and Spotify (currently only supports Youtube -> Spotify). Makes use of OAuth 2.0 authentication to connect the program to both Google and Spotify's respective APIs and stores the refresh_tokens locally so logging in should only need to be done once. Once authenticated, it can then make API calls to fetch the user's current playlist and match songs across platforms.  
 
+## Table of Contents  
+- [Overview](#overview)
+  * [Walkthrough](#walkthrough)
+- [Installation](#installation)
+- [Authentication Setup](#authentication-setup)
+  * [Youtube](#youtube)
+  * [Spotify](#spotify)
+- [Usage](#usage)
+- [Built with](#built-with)
+- [Author](#author)
+
 ## Overview  
 
 <p align="center">
@@ -57,7 +68,7 @@ The app authenticates its API clients using OAuth 2.0. On the Youtube (Google) s
 
 To get started, you'll need to obtain the varous API keys, client IDs, secrets, etc. required for both platforms in order to connect to their APIs.  
   
-### Youtube (Google)
+### Youtube
 You will need to obtain two main pieces of information, an API key and a client secrets JSON file. To get both of these, follow all of the instructions for *Step 1* on Google's documentation [here](https://developers.google.com/youtube/v3/quickstart/python#step_1_set_up_your_project_and_credentials). You can name your project YoutubeSpotifyMigration or anything you'd like really. The application type `Other` might not be available as the instructions say, so just choose `installed` instead.  
 
 Once you have all of that information, you can create a file called `youtube_client_secret.json` in the root directory of your program. It should have **exactly** the following format (you can also reference the [`youtube_client_secret_example.json`](https://github.com/peeblesbrandon/YoutubeSpotifyMigration/blob/master/youtube_client_secret_example.json) file as a template too):  
