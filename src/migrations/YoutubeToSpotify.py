@@ -6,13 +6,6 @@ from examples import custom_style_2
 import sys, json
 from colorama import Fore, Back, Style
 
-import youtube_dl
-# youtube_dl.utils.std_headers['User-Agent'] = "facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)"
-youtube_dl.utils.std_headers['User-Agent'] = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
-# import youtube_dl.utils
-# # config youtube_dl with custom user-agent to fix some bugs
-# youtube_dl.utils.std_headers['User-Agent'] = "facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)"
-
 class Migrator:
     """Migration methods for Youtube -> Spotify"""
     def __init__(self):
