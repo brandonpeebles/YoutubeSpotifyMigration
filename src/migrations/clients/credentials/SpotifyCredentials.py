@@ -42,7 +42,7 @@ class Credentials:
         else:
             return False
 
-    def refresh(self, auth_header: str):
+    def refresh(self):
         """Requests refreshed access token using the refresh_token and updates existing"""
         payload = {
             'grant_type': "refresh_token",

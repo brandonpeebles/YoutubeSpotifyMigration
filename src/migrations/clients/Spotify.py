@@ -46,7 +46,7 @@ class Client:
             if creds and creds.expired() is True and creds.refresh_token() is not None:
                 print(Fore.MAGENTA + 'Creds expired.' + Style.RESET_ALL)
                 print('Refreshing token...', end=" ")
-                creds.refresh(self._get_auth_header()) 
+                creds.refresh() 
             else:
                 print(Fore.MAGENTA + 'Creds not found.' + Style.RESET_ALL)
                 creds = self._run_manual_auth_code_flow()
