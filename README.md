@@ -22,10 +22,10 @@ The program authenticates its API clients using OAuth2. On the Youtube (Google) 
 
 To get started, you'll need to obtain the varous API keys, client IDs, secrets, etc. required for both platforms in order to connect to their APIs.  
   
-**Youtube (Google)**  
+### Youtube (Google)
 [insert instructions and screenshots here]  
   
-**Spotify**  
+### Spotify
 [insert instructions and screenshots here]
 
 ## Built with
