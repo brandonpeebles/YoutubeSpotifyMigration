@@ -71,7 +71,7 @@ To get started, you'll need to obtain the varous API keys, client IDs, secrets, 
 ### Youtube
 You will need to obtain two main pieces of information, an API key and a client secrets JSON file. To get both of these, follow all of the instructions for *Step 1* on Google's documentation [here](https://developers.google.com/youtube/v3/quickstart/python#step_1_set_up_your_project_and_credentials). You can name your project YoutubeSpotifyMigration or anything you'd like really. The application type `Other` might not be available as the instructions say, so just choose `installed` instead.  
 
-Once you have all of that information, you can create a file called `youtube_client_secret.json` in the root directory of your program. It should have **exactly** the following format (you can also reference the [`youtube_client_secret_example.json`](https://github.com/peeblesbrandon/YoutubeSpotifyMigration/blob/master/youtube_client_secret_example.json) file as a template too):  
+Once you have all of that information, you can create a file called `youtube_client_secret.json` in the root directory of your program and populate it with the credentials you receieved. It should have **exactly** the following format (you can also reference the [`youtube_client_secret_example.json`](https://github.com/peeblesbrandon/YoutubeSpotifyMigration/blob/master/youtube_client_secret_example.json) file as a template too):  
 ```
 {
   "installed": {
