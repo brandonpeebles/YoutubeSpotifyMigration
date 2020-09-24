@@ -21,7 +21,7 @@ class Client:
         print(Fore.BLUE + 'Initializing Spotify API client.' + Style.RESET_ALL)
         self.client = None
         self.secrets = None
-        self.base_auth_URI = 'https://accounts.spotify.com/authorize?'
+        self.base_auth_URL = 'https://accounts.spotify.com/authorize?'
         self.creds = None
         self.user_id = None
 
@@ -66,8 +66,8 @@ class Client:
         """
         print('Running manual authentication.')
         self.secrets = self._load_secrets("./spotify_client_secret.json")
-        auth_URI = self._get_auth_uri()
-        auth_code = self._get_auth_code_from_redirectURL(auth_URI)
+        auth_URL = self._get_auth_urL()
+        auth_code = self._get_auth_code_from_redirectURL(auth_URL)
         creds_json = self._request_tokens(auth_code)
         return Credentials(creds_json, self._get_auth_header())
 
@@ -90,7 +90,7 @@ class Client:
         else:
             return client_secrets
     
-    def _get_auth_uri(self):
+    def _get_auth_url(self):
         """
         Use the client secrets file to create the auth URI for the initial GET request.
         The user will navigate to this link and retreive the URL redirect.
@@ -101,9 +101,9 @@ class Client:
             'scope': self.secrets['scope'],
             'response_type': self.secrets['response_type']
         }
-        return self.base_auth_URI + urlencode(payload)
+        return self.base_auth_URL + urlencode(payload)
     
-    def _get_auth_code_from_redirectURL(self, auth_uri):
+    def _get_auth_code_from_redirectURL(self, auth_url):
         """
         Open web browser and direct user to login page based on their secrets file.
         Prompt the user to copy and paste the URL from when they're redirected back into the terminal
@@ -116,7 +116,7 @@ class Client:
         time.sleep(2)
         print(Fore.BLUE + 'Redirecting in 5 seconds...' + Style.RESET_ALL)
         time.sleep(5)
-        webbrowser.open(auth_uri)
+        webbrowser.open(auth_url)
         redirectURI = input("Paste the URL you were redirected to after logging in: ")
         parsedURI = urllib.parse.urlparse(redirectURI)
         return urllib.parse.parse_qs(parsedURI.query)['code'][0]

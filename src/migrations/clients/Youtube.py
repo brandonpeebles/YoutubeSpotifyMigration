@@ -62,7 +62,7 @@ class Client:
                 # Run auth flow
                 client_secrets_file = "./youtube_client_secret.json"
                 try:
-                    scopes = ["https://www.googleapis.com/auth/youtube.readonly"]
+                    scopes = ["https://www.googleapis.com/auth/youtube.readonly", "https://www.googleapis.com/auth/youtube.force-ssl"]
                     flow = google_auth_oauthlib.flow.InstalledAppFlow.from_client_secrets_file(
                         client_secrets_file, scopes
                     )
