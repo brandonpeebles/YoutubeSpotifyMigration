@@ -203,16 +203,19 @@ class Client:
         else:
             return results_json[0]
     
-    def _get_user_id(self):
+    def get_user_id(self):
         """fetch spotify user id based on the access token"""
-        headers = {
-                "Content-Type": "application/json",
-                "Authorization": f"Bearer {self.creds.access_token()}"
-        }
-        response = requests.get("https://api.spotify.com/v1/me", headers=headers)
-        if response.status_code != 200:
-            raise RequestError(response.status_code, response.text)
-        return response.json()['id']
+        if self.user_id is not None:
+            return self.user_id
+        else:
+            headers = {
+                    "Content-Type": "application/json",
+                    "Authorization": f"Bearer {self.creds.access_token()}"
+            }
+            response = requests.get("https://api.spotify.com/v1/me", headers=headers)
+            if response.status_code != 200:
+                raise RequestError(response.status_code, response.text)
+            return response.json()['id']
 
     def create_playlist(self, songs, playlist_name):
         """Create new empty playlist and return playlist_id"""
@@ -223,7 +226,7 @@ class Client:
                 "Content-Type": "application/json",
                 "Authorization": f"Bearer {self.creds.access_token()}"
         }
-        request_url = f"https://api.spotify.com/v1/users/{self._get_user_id()}/playlists"
+        request_url = f"https://api.spotify.com/v1/users/{self.get_user_id()}/playlists"
         response = requests.post(request_url, json=payload, headers=headers)
         if response.status_code not in [200, 201]:
             raise RequestError(response.status_code, response.text)
@@ -232,13 +235,9 @@ class Client:
 
     def get_all_playlists(self):
         """Fetch and return all playlists associated with authenticated user"""
-        # get user id
-        if self.user_id is not None:
-            user_id = self.user_id
-        else:
-            user_id = self._get_user_id()
+        print(f"\nFetching your Spotify playlists...", end=" ")
         # build and execute request
-        request_url = f"https://api.spotify.com/v1/users/{user_id}/playlist"
+        request_url = "https://api.spotify.com/v1/me/playlists"
         headers = {
                 "Content-Type": "application/json",
                 "Authorization": f"Bearer {self.creds.access_token()}"
@@ -246,6 +245,7 @@ class Client:
         response = requests.get(request_url, headers=headers)
         if response.status_code != 200:
             raise RequestError(response.status_code, response.text)
+        print(Fore.GREEN + 'Success.\n' + Style.RESET_ALL)
         return response.json()['items']
 
     def add_songs_to_playlist(self, songs, playlist_id):

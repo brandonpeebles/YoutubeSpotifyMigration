@@ -139,8 +139,7 @@ class Migrator:
                         'name': "Create new playlist"
                     },
                     {
-                        'name': "Add to existing playlist",
-                        'disabled': "Not yet available"
+                        'name': "Add to existing playlist"
                     }
                 ]
             }
@@ -162,9 +161,29 @@ class Migrator:
         else:
             # get spotify playlists
             user_playlists = self.SpotifyAPI.get_all_playlists()
-            # prompt for selection
+            # prompt for selection and
+            # filter out playlists that the user can\'t modify
+            user_id = self.SpotifyAPI.get_user_id()
+            question = [                                                            # prompt user to select one
+                {
+                    'type': 'list',
+                    'name': 'selectedPlaylist',
+                    'message': "Which playlist would you like to transfer the songs to?",
+                    'choices': [
+                        {
+                            'value': idx, 
+                            'name': playlist["name"]
+                            # 'disabled': False if (playlist['owner']['id'] == user_id or playlist['collaborative'] == True) 
+                            #     else "Unable to modify this playlist" 
+                        } for idx, playlist in enumerate(user_playlists) 
+                            if (playlist['owner']['id'] == user_id 
+                                or playlist['collaborative'] == True)]
+                }
+            ]
+            answer = prompt(question, style=custom_style_2)
+            selectedIndex = answer['selectedPlaylist']
             # get the playlist_id
-            pass
+            playlist_id = user_playlists[selectedIndex]['id']
         # add to songs to new or selected playlist and print out the URL
         playlist_URL = self.SpotifyAPI.add_songs_to_playlist(song_list, playlist_id)
         print(Fore.YELLOW + f"\nDone! Playlist available at:", end=" ")
