@@ -23,6 +23,7 @@ class Client:
         self.secrets = None
         self.base_auth_URI = 'https://accounts.spotify.com/authorize?'
         self.creds = None
+        self.user_id = None
 
     # AUTHENTICATION
     def authenticate(self):
@@ -213,7 +214,6 @@ class Client:
             raise RequestError(response.status_code, response.text)
         return response.json()['id']
 
-    
     def create_playlist(self, songs, playlist_name):
         """Create new empty playlist and return playlist_id"""
         payload = {
@@ -227,7 +227,26 @@ class Client:
         response = requests.post(request_url, json=payload, headers=headers)
         if response.status_code not in [200, 201]:
             raise RequestError(response.status_code, response.text)
+        self.user_id = response.json()['id']
         return response.json()['id']
+
+    def get_all_playlists(self):
+        """Fetch and return all playlists associated with authenticated user"""
+        # get user id
+        if self.user_id is not None:
+            user_id = self.user_id
+        else:
+            user_id = self._get_user_id()
+        # build and execute request
+        request_url = f"https://api.spotify.com/v1/users/{user_id}/playlist"
+        headers = {
+                "Content-Type": "application/json",
+                "Authorization": f"Bearer {self.creds.access_token()}"
+        }
+        response = requests.get(request_url, headers=headers)
+        if response.status_code != 200:
+            raise RequestError(response.status_code, response.text)
+        return response.json()['items']
 
     def add_songs_to_playlist(self, songs, playlist_id):
         """
@@ -261,3 +280,4 @@ class Client:
         for i in range(0, len(l), n):
             yield l[i:i+n]
         
+    
