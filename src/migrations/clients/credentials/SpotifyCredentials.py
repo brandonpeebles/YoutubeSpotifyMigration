@@ -1,4 +1,5 @@
 import json
+from pprint import pprint
 import requests
 from datetime import datetime, timedelta
 
@@ -6,11 +7,11 @@ class Credentials:
     """Class for storing and interacting with Spotify OAuth2 credentials"""
     def __init__(self, creds_json, auth_header):
         """initialize credentials object with creds and base64 encoded auth_header and add expiry."""
-        self._access_token = creds_json['access_token'],
-        self._token_type = creds_json['token_type'],
-        self._expires_in = creds_json['expires_in'],
+        self._access_token = creds_json['access_token']
+        self._token_type = creds_json['token_type']
+        self._expires_in = creds_json['expires_in']
         self._expiry = datetime.now() + timedelta(seconds=creds_json['expires_in'])
-        self._refresh_token = creds_json['refresh_token'],
+        self._refresh_token = creds_json['refresh_token']
         self._scope = creds_json['scope']
         self._auth_header = auth_header
         
@@ -32,11 +33,11 @@ class Credentials:
     
     def expired(self):
         """Returns true if current access token is expired. False otherwise."""
-        return datetime.now > self._expiry
+        return datetime.now() > self._expiry
 
     def valid(self):
         """Returns true if tokens exist and are not expired. False otherwise."""
-        if self._access_token and self._refresh_token and not self.expired:
+        if self._access_token and self._refresh_token and self.expired() is False:
             return True
         else:
             return False

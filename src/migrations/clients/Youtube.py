@@ -114,7 +114,7 @@ class Client:
             return response
 
     def get_playlist_items(self, id):        
-        print(f'Fetching items from selected playlist...', end=" ")
+        print(f'Fetching items from selected Youtube playlist...', end=" ")
         try: 
             request = self.client.playlistItems().list(
                 part="snippet,contentDetails",

@@ -24,6 +24,7 @@ class Client:
         self.base_auth_URI = 'https://accounts.spotify.com/authorize?'
         self.creds = None
 
+    # AUTHENTICATION
     def authenticate(self):
         """Set up and authenticate youtube client"""
         print('Running Authorization Code Flow.')
@@ -40,12 +41,12 @@ class Client:
         print('Checking local directory for existing creds...', end=" ")
         if os.path.exists('spotify_token.pickle'):
             print(Fore.GREEN + 'Creds located.' + Style.RESET_ALL)
-            creds = self._load_creds()  
-        if not creds or not creds.valid:
-            if creds and creds.expired and creds.refresh_token:
+            creds = self._load_creds()
+        if not creds or creds.valid() is False:
+            if creds and creds.expired() is True and creds.refresh_token() is not None:
                 print(Fore.MAGENTA + 'Creds expired.' + Style.RESET_ALL)
                 print('Refreshing token...', end=" ")
-                creds.refresh(self._get_auth_header) 
+                creds.refresh(self._get_auth_header()) 
             else:
                 print(Fore.MAGENTA + 'Creds not found.' + Style.RESET_ALL)
                 creds = self._run_manual_auth_code_flow()
@@ -133,7 +134,7 @@ class Client:
         }
         # make request
         response = requests.post('https://accounts.spotify.com/api/token', data=payload, headers=headers)
-        return json.loads(response.text)
+        return response.json()
 
     def _save_creds(self, creds):
         """Pickle and save the credentials for easy logins"""
@@ -154,4 +155,46 @@ class Client:
         encodedData = base64.b64encode(f"{self.secrets['client_id']}:{self.secrets['client_secret']}".encode()).decode('utf-8')
         return f"Basic {encodedData}"
 
-    
+
+    # API METHODS
+    def get_search_result(self, track, artist):
+        """
+        Search for song by track and artist name.
+        Return first result object or None
+        """
+        payload = {
+            'query': f"track:{track} artist:{artist}",
+            'type': "track",
+            'limit': 1
+        }
+        request_url = "https://api.spotify.com/v1/search?" + urlencode(payload)
+        payload = {
+            'query': f"track:{artist} artist:{track}",
+            'type': "track",
+            'limit': 1
+        }        
+        request_url_artist_as_track = "https://api.spotify.com/v1/search?" + urlencode(payload)
+        headers={
+                "Content-Type": "application/json",
+                "Authorization": f"Bearer {self.creds.access_token()}"
+        }
+        # make get request to spotify api for track and artist name
+        response = requests.get(request_url, headers=headers)
+        # check for good request
+        if response.status_code != 200:
+            raise RequestError(response.status_code, response.text)
+        results_json = response.json()['tracks']['items']
+        # check if search results contained any songs
+        if len(results_json) == 0:
+            # One last attempt, using the artist var as track 
+            # (in case where youtube title is Track - Artist instead of Artist - Track)
+            response = requests.get(request_url_artist_as_track, headers=headers)
+            if response.status_code != 200:
+                raise RequestError(response.status_code, response.text)
+            results_json = response.json()['tracks']['items']
+            if len(results_json) == 0:
+                return None
+            else:
+                return results_json[0]
+        else:
+            return results_json[0]
