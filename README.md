@@ -20,7 +20,7 @@ pip install -r requirements.txt
 ## Authentication Setup  
 The program authenticates its API clients using OAuth2. On the Youtube (Google) side, this is implemented using the `google-auth-oauthlib` package ([docs](http://google-auth-oauthlib.readthedocs.io)). On the Spotify side, this has been implemented through custom built set of classes (`Spotify.py` and `SpotifyCredentials.py`) which performs their [Authorization Code Flow](https://developer.spotify.com/documentation/general/guides/authorization-guide/#authorization-code-flow). With either platform, once we've successfully authenticated and received tokens, we pickle these and store them locally to easily authenticate in the future or refresh with new tokens. 
 
-To get started, you'll need to obtain client IDs and secrets files for both platforms in order to connect to their APIs.  
+To get started, you'll need to obtain the varous API keys, client IDs, secrets, etc. required for both platforms in order to connect to their APIs.  
   
 **Youtube (Google)**  
 [insert instructions and screenshots here]  
