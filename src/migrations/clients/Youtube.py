@@ -23,7 +23,9 @@ class Client:
     def authenticate(self):
         """Set up and authenticate youtube client"""
         print('Running OAuth script.')
-        
+
+        # Method below adapted from Google's example: 
+        # https://developers.google.com/youtube/v3/quickstart/python
         # Disable OAuthlib's HTTPS verification when running locally.
         # *DO NOT* leave this option enabled in production.
         os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
