@@ -53,8 +53,8 @@ class Credentials:
             'Content-Type': 'application/x-www-form-urlencoded'
         }
         # make request
-        response = requests.post('https://accounts.spotify.com/api/token', data=payload, headers=headers)
-        response = json.loads(response.text)
+        response = requests.post('https://accounts.spotify.com/api/token', 
+            data=payload, headers=headers).json()
         # update creds with new data from response
         self._access_token = response['access_token']
         self._set_expiry(response['expires_in'])

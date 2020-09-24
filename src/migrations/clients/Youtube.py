@@ -101,7 +101,8 @@ class Client:
 
     # API CALLS
     def get_all_playlists(self):
-        print('Fetching your Youtube playlists...', end=" ")
+        # print('Fetching your Youtube playlists...', end=" ")
+        print('Fetching your Youtube playlists...\n')
         time.sleep(1)
         try:
             request = self.client.playlists().list(
@@ -114,7 +115,7 @@ class Client:
             print(Style.BRIGHT + Back.RED + Fore.WHITE + 'ERROR:' + Style.RESET_ALL)
             raise RequestError(err.resp.status, err.content.decode('utf-8'))
         else:
-            print(Fore.GREEN + 'Success.\n' + Style.RESET_ALL)
+            # print(Fore.GREEN + 'Success.\n' + Style.RESET_ALL)
             return response
 
     def get_playlist_items(self, id):        

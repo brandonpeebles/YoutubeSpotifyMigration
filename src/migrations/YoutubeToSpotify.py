@@ -7,7 +7,7 @@ import sys, json, time
 from colorama import Fore, Back, Style
 
 class Migrator:
-    """Migration methods for Youtube -> Spotify"""
+    """Migration class for Youtube -> Spotify"""
     def __init__(self):
         # initialize and authenticate Youtube client instances
         self.YoutubeAPI = Youtube.Client()
@@ -18,14 +18,17 @@ class Migrator:
         # self._youtube_playlist = None
         self._songs = []
 
+    # MAIN
     def execute(self):
         youtube_playlist = self._get_playlist_from_input()
         if self._get_spotify_matches(youtube_playlist['items']) is False:
             print(Style.BRIGHT + Back.RED + Fore.WHITE + 'ERROR:' + Style.RESET_ALL)
             print(Style.NORMAL + Fore.RED + 'No matches found. Terminating...' + Style.RESET_ALL)
             sys.exit()
-        self._confirm_spotify_matches()
+        transfer_list = self._confirm_spotify_matches()
+        self._transfer_songs(transfer_list)
     
+    # HELPER METHODS
     def _get_playlist_from_input(self):
         """
         Fetch Youtube playlists for user.
@@ -117,8 +120,49 @@ class Migrator:
             }
         ]
         answers = prompt(questions, style=custom_style_2)
-        pprint(answers)
-
-    def _transfer_songs(self):
-        pass
-
+        # filter our songs list for just the ones selected by the user
+        selected_indices = []
+        for song in answers['transfer_list']:
+            colon_idx = song.find(':')
+            original_idx = int(song[0:colon_idx]) - 1
+            selected_indices.append(original_idx)
+        return [self._songs[i]['spotify_match'] for i in selected_indices]
+        
+    def _transfer_songs(self, song_list):
+        question = [                                                            # prompt user to select one
+            {
+                'type': 'list',
+                'name': 'transfer_method',
+                'message': "Would you like to create a new playlist or add to an existing one?",
+                'choices': [
+                    {
+                        'name': "Create new playlist"
+                    },
+                    {
+                        'name': "Add to existing playlist",
+                        'disabled': "Not yet available"
+                    }
+                ]
+            }
+        ]
+        answer = prompt(question, style=custom_style_2)['transfer_method']
+        if answer == 'Create new playlist':
+            question = [
+                {
+                    'type': 'input',
+                    'name': 'new_playlist_name',
+                    'message': 'Enter a name for your new playlist:',
+                    'default': 'New Playlist From Youtube',
+                    'validate': lambda answer: 'You must enter a name for your playlist.' \
+                    if len(answer) == 0 else True
+                }
+            ]
+            new_playlist_name = prompt(question, style=custom_style_2)['new_playlist_name']
+            playlist_id = self.SpotifyAPI.create_playlist(song_list, new_playlist_name)
+        else:
+            # get spotify playlists
+            # prompt for selection
+            # get the playlist_id
+            pass
+        # add to songs to new or selected playlist
+        self.SpotifyAPI.add_songs_to_playlist(song_list, playlist_id)
