@@ -25,8 +25,8 @@ class Migrator:
             print(Style.BRIGHT + Back.RED + Fore.WHITE + 'ERROR:' + Style.RESET_ALL)
             print(Style.NORMAL + Fore.RED + 'No matches found. Terminating...' + Style.RESET_ALL)
             sys.exit()
-        transfer_list = self._confirm_spotify_matches()
-        self._transfer_songs(transfer_list)
+        uri_list = self._confirm_spotify_matches()
+        self._transfer_songs(uri_list)
     
     # HELPER METHODS
     def _get_playlist_from_input(self):
@@ -126,7 +126,7 @@ class Migrator:
             colon_idx = song.find(':')
             original_idx = int(song[0:colon_idx]) - 1
             selected_indices.append(original_idx)
-        return [self._songs[i]['spotify_match'] for i in selected_indices]
+        return [self._songs[i]['spotify_match']['uri'] for i in selected_indices]
         
     def _transfer_songs(self, song_list):
         question = [                                                            # prompt user to select one
@@ -158,11 +158,13 @@ class Migrator:
                 }
             ]
             new_playlist_name = prompt(question, style=custom_style_2)['new_playlist_name']
-            playlist_id = self.SpotifyAPI.create_playlist(song_list, new_playlist_name)
+            playlist_id = self.SpotifyAPI.create_playlist(song_list, new_playlist_name)            
         else:
             # get spotify playlists
             # prompt for selection
             # get the playlist_id
             pass
-        # add to songs to new or selected playlist
-        self.SpotifyAPI.add_songs_to_playlist(song_list, playlist_id)
+        # add to songs to new or selected playlist and print out the URL
+        playlist_URL = self.SpotifyAPI.add_songs_to_playlist(song_list, playlist_id)
+        print(Fore.YELLOW + f"\nDone! Playlist available at:", end=" ")
+        print(Fore.BLUE + playlist_URL + Style.RESET_ALL + "\n")

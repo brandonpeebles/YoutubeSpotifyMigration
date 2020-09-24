@@ -109,7 +109,10 @@ class Client:
         Parse out the auth_code and store it in class object
         """
         print('You will sent to your browser to authenticate this app.')
+        time.sleep(2)
         print('Follow the instructions there, and then copy/paste the URL here once you are redirected.')
+        print('The web page whose URL you need to copy should say Example Domain.')
+        time.sleep(2)
         print(Fore.BLUE + 'Redirecting in 5 seconds...' + Style.RESET_ALL)
         time.sleep(5)
         webbrowser.open(auth_uri)
@@ -227,5 +230,34 @@ class Client:
         return response.json()['id']
 
     def add_songs_to_playlist(self, songs, playlist_id):
-        """Add song(s) from by URI to playlist by playlist_id"""
-        pass
+        """
+        Add song(s) from list by URI to playlist by playlist_id/
+        Per spotify API limitation, can only add up to 100 at at time
+        """
+        print(f"Adding selected songs to playlist...", end=" ")
+        # split list of songs into URI lists of 100 each max
+        URI_lists = list(self._partition_URI_list(songs, 100))
+        for URI_list in URI_lists:
+            # set body payload as comma separated list
+            payload = {
+                'uris':  URI_list
+            }
+            headers = {
+                    "Content-Type": "application/json",
+                    "Authorization": f"Bearer {self.creds.access_token()}"
+            }
+            request_url = f"https://api.spotify.com/v1/playlists/{playlist_id}/tracks"
+            response = requests.post(request_url, json=payload, headers=headers)
+            if response.status_code not in [200, 201]:
+                print(Back.RED + Fore.WHITE + "FAILED" + Style.RESET_ALL)
+                raise RequestError(response.status_code, response.text)
+        print(Fore.GREEN + 'Success.' + Style.RESET_ALL)
+        # return the newly created playlist URL
+        return f"https://open.spotify.com/playlist/{playlist_id}"
+
+    def _partition_URI_list(self, l, n):
+        """helper: splits URI list into lists of max allowable size (n) for API"""
+        # list (l) and max size (n)
+        for i in range(0, len(l), n):
+            yield l[i:i+n]
+        

@@ -119,7 +119,7 @@ class Client:
             return response
 
     def get_playlist_items(self, id):        
-        print(f'Fetching items from selected Youtube playlist...', end=" ")
+        print(f'\nFetching items from selected Youtube playlist...', end=" ")
         try: 
             request = self.client.playlistItems().list(
                 part="snippet,contentDetails",
@@ -128,10 +128,10 @@ class Client:
             )
             response = request.execute()
         except googleapiclient.errors.HttpError as err:
-            print(Style.BRIGHT + Back.RED + Fore.WHITE + 'ERROR:' + Style.RESET_ALL)
+            print(Style.BRIGHT + Back.RED + Fore.WHITE + 'ERROR' + Style.RESET_ALL)
             raise RequestError(err.resp.status, err.content.decode('utf-8'))
         else:
-            print(Fore.GREEN + 'Success.' + Style.RESET_ALL)
+            print(Fore.GREEN + 'Success.\n' + Style.RESET_ALL)
             return response
 
     
