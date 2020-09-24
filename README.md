@@ -37,6 +37,6 @@ To get started, you'll need to obtain client IDs and secrets files for both plat
 * Pickle
 * Requests
 
-## Authors
+## Author
 Brandon Peebles
 
