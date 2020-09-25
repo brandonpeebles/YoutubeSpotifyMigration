@@ -136,7 +136,6 @@ class Migrator:
         return [self._songs[i]['youtube_match'] for i in selected_indices]
         
     def _transfer_songs(self, video_list, youtube_playlist_title):
-        print("\nTransferring your playlist...\n")
         question = [                                                            # prompt user to select one
             {
                 'type': 'list',
@@ -189,6 +188,7 @@ class Migrator:
             # get the playlist_id
             playlist_id = user_playlists[selectedIndex]['id']
         # add to songs to new or selected playlist and print out the URL
+        print("\nTransferring your playlist...\n")
         playlist_URL = self.YoutubeAPI.add_videos_to_playlist(video_list, playlist_id)
         print(Fore.YELLOW + f"\nDone! Playlist available at:", end=" ")
         print(Fore.BLUE + playlist_URL + Style.RESET_ALL + "\n")
