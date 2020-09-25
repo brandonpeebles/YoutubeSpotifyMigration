@@ -59,7 +59,7 @@ class Migrator:
         Instead, manually parse the video title. Most follow a similar format:
         {Artist name} - {Track name} {(Optional Parenthetical Statement that gets ignored here)}
         """
-        print('Matching Youtube videos to Spotify songs.')
+        print('Matching YouTube videos to Spotify songs.')
         # iterate through youtube playlist and search spotify for match
         no_matches_found = True # will remain true if none are found
         for item in items:
@@ -103,26 +103,32 @@ class Migrator:
         They may uncheck any box to skip over during transfer
         If no match found, checkbox should be disabled
         """
-        questions = [
-            {
-                'type': 'checkbox',
-                'message': 'Confirm songs for transfer. Uncheck to skip.',
-                'name': 'transfer_list',
-                'choices': [
-                    {
-                        # 'value': idx, causes bug where 'checked' is ignored -- will parse index out of name
-                        'name': (str(idx + 1) + ': ' + song['spotify_match']['artists'][0]['name'] + ' - ' + song['spotify_match']['name'] 
-                                if song['spotify_match'] 
-                                else str(idx + 1) + ': ' + song['youtube_title']),
-                        'checked': True if song['spotify_match'] is not None else False,
-                        'disabled': False if song['spotify_match'] is not None else "No match found"
-                    } for idx, song in enumerate(self._songs)
-                ],
-                'validate': lambda answer: 'You must choose at least one song to transfer.' \
-                    if len(answer) == 0 else True
-            }
-        ]
-        answers = prompt(questions, style=custom_style_2)
+        answers = {}
+        answers['transfer_list'] = []
+        while len(answers['transfer_list']) == 0:
+            questions = [
+                {
+                    'type': 'checkbox',
+                    'message': 'Confirm songs for transfer. Uncheck to skip.',
+                    'name': 'transfer_list',
+                    'choices': [
+                        {
+                            # 'value': idx, causes bug where 'checked' is ignored -- will parse index out of name
+                            'name': (str(idx + 1) + ': ' + song['spotify_match']['artists'][0]['name'] + ' - ' + song['spotify_match']['name'] 
+                                    if song['spotify_match'] 
+                                    else str(idx + 1) + ': ' + song['youtube_title']),
+                            'checked': True if song['spotify_match'] is not None else False,
+                            'disabled': False if song['spotify_match'] is not None else "No match found"
+                        } for idx, song in enumerate(self._songs)
+                    ],
+                    # validation for checkboxes broken in package - need to refactor
+                    # could use Questionary instead: https://github.com/tmbo/questionary
+                    # using while loop as quick fix
+                    'validate': lambda answer: 'You must choose at least one song to transfer.' \
+                        if len(answer) == 0 else True
+                }
+            ]
+            answers = prompt(questions, style=custom_style_2)
         # filter our songs list for just the ones selected by the user
         selected_indices = []
         for song in answers['transfer_list']:
@@ -160,7 +166,7 @@ class Migrator:
                 }
             ]
             new_playlist_name = prompt(question, style=custom_style_2)['new_playlist_name']
-            playlist_id = self.SpotifyAPI.create_playlist(song_list, new_playlist_name)            
+            playlist_id = self.SpotifyAPI.create_playlist(new_playlist_name)            
         else:
             # get spotify playlists
             user_playlists = self.SpotifyAPI.get_all_playlists()

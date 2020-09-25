@@ -101,8 +101,9 @@ class Client:
 
     # API CALLS
     def get_all_playlists(self):
+        """get all playlists for authenticated user"""
         # print('Fetching your Youtube playlists...', end=" ")
-        print('Fetching your Youtube playlists...\n')
+        print('\nFetching your Youtube playlists...', end=" ")
         time.sleep(1)
         try:
             request = self.client.playlists().list(
@@ -127,10 +128,11 @@ class Client:
             print(Style.BRIGHT + Back.RED + Fore.WHITE + 'ERROR:' + Style.RESET_ALL)
             raise RequestError(err.resp.status, err.content.decode('utf-8'))
         else:
-            # print(Fore.GREEN + 'Success.\n' + Style.RESET_ALL)
+            print(Fore.GREEN + 'Success.\n' + Style.RESET_ALL)
             return response
 
-    def get_playlist_items(self, id):        
+    def get_playlist_items(self, id):    
+        """get full details of videos for a given playlist id"""    
         print(f'\nFetching items from selected Youtube playlist...', end=" ")
         try: 
             request = self.client.playlistItems().list(
@@ -158,4 +160,81 @@ class Client:
             print(Fore.GREEN + 'Success.\n' + Style.RESET_ALL)
             return response
 
+    def get_search_result(self, query_str):
+        """
+        Get first youtube search result for given query string.
+        Return first video object or None
+        """
+        try:
+            request = self.client.search().list(
+                part="snippet",
+                type="video",
+                maxResults=1,
+                q=query_str
+            )
+            response = request.execute()
+        except googleapiclient.errors.HttpError as err:
+            print(Style.BRIGHT + Back.RED + Fore.WHITE + 'ERROR' + Style.RESET_ALL)
+            raise RequestError(err.resp.status, err.content.decode('utf-8'))
+        else:
+            if len(response['items']) == 0:
+                return None                                                     # no results
+            else:
+                return response['items'][0]                                     # return first video
     
+    def create_playlist(self, playlist_name):
+        """
+        Creates a new empty playlist and returns its playlist_id
+        Defaults privacy status to public
+        """
+        try:
+            request = self.client.playlists().insert(
+            part="snippet,status",
+            body={
+            "snippet": {
+                    "title": playlist_name,
+                    "description": "Created via YouTubeSpotifyMigration.",
+                    "tags": [
+                        "YouTubeSpotifyMigration",
+                        "API call",
+                        "music"
+                    ],
+                    "defaultLanguage": "en"
+                },
+                "status": {
+                    "privacyStatus": "public"
+                }
+                }
+            )
+            response = request.execute()
+        except googleapiclient.errors.HttpError as err:
+            print(Style.BRIGHT + Back.RED + Fore.WHITE + 'ERROR' + Style.RESET_ALL)
+            raise RequestError(err.resp.status, err.content.decode('utf-8'))
+        else:
+            return response['id']
+
+    def add_videos_to_playlist(self, video_list, playlist_id):
+        """
+        Add videos iteratively to playlist by its id
+        Return URL to playlist
+        """
+        try:
+            for video in video_list:
+                request = self.client.playlistItems().insert(
+                    part="snippet",
+                    body={
+                    "snippet": {
+                        "playlistId": playlist_id,
+                        "resourceId": {
+                            "kind": video['id']['kind'],
+                            "videoId": video['id']['videoId']
+                        }
+                    }
+                    }
+                )
+                request.execute()
+                time.sleep(0.2)                                                   # wait 1 sec to not exceed youtube quota
+        except googleapiclient.errors.HttpError as err:
+            print(Style.BRIGHT + Back.RED + Fore.WHITE + 'ERROR' + Style.RESET_ALL)
+            raise RequestError(err.resp.status, err.content.decode('utf-8'))
+        return f"https://www.youtube.com/playlist?list={playlist_id}"
