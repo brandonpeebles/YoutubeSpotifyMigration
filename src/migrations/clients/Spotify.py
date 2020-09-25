@@ -248,6 +248,29 @@ class Client:
         print(Fore.GREEN + 'Success.\n' + Style.RESET_ALL)
         return response.json()['items']
 
+    def get_playlist_items(self, playlist_id):
+        """Get full details of the tracks or episodes of a playlist owned by a Spotify user"""
+        print(f'\nFetching items from selected Youtube playlist...', end=" ")
+        # build and execute request
+        request_url = "https://api.spotify.com/v1/playlists/{playlist_id}/tracks"
+        headers = {
+                "Content-Type": "application/json",
+                "Authorization": f"Bearer {self.creds.access_token()}"
+        }
+        response = requests.get(request_url, headers=headers)
+        if response.status_code != 200:
+            raise RequestError(response.status_code, response.text)
+        # handle responses that exceed item limit and require pagination
+        nextURL = response['next']
+        while nextURL is not None:
+            nextResponse = requests.get(nextURL, headers)
+            if response.status_code != 200:
+                raise RequestError(response.status_code, response.text)
+            response['items'].extend(nextResponse['items'])
+            nextURL = response['next']
+        print(Fore.GREEN + 'Success.\n' + Style.RESET_ALL)
+        return response.json()['items']
+
     def add_songs_to_playlist(self, songs, playlist_id):
         """
         Add song(s) from list by URI to playlist by playlist_id/
