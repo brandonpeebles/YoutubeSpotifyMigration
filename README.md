@@ -46,7 +46,7 @@ User-friendly command line interface written in Python for migrating playlists b
 <p align="center">
   <img src="https://github.com/peeblesbrandon/YoutubeSpotifyMigration/blob/master/img/select_playlist_destination.png" width="500" />
 </p>  
-
+  
 7. **App automatically adds songs:** The app will then add all of the chosen songs into the playlist and return a URL to it.
 
 ## Installation
@@ -80,7 +80,13 @@ To get started, you'll need to obtain the varous API keys, client IDs, secrets, 
   
 ### YouTube
 You will need to obtain two main pieces of information, an API key and a client secrets JSON file. To get both of these, follow all of the instructions for *Step 1* on Google's documentation [here](https://developers.google.com/youtube/v3/quickstart/python#step_1_set_up_your_project_and_credentials). You can name your project YouTubeSpotifyMigration or anything you'd like really. The application type `Other` might not be available as the instructions say, so you can choose `Other UI`, `Other non-UI`, or `installed` instead.  
-
+  
+When selecting your application's OAuth consent screen, you'll be asked to select scopes. Search for YouTube and select the following:  
+  
+<p align="center">
+  <img src="https://github.com/peeblesbrandon/YoutubeSpotifyMigration/blob/master/img/select_youtube_scopes.png" width="500" />
+</p>  
+  
 Once you have all of that information, you can create a file called `youtube_client_secret.json` in the root directory of your program and populate it with the credentials you receieved. It should have **exactly** the following format (you can also reference the [`youtube_client_secret_example.json`](https://github.com/peeblesbrandon/YouTubeSpotifyMigration/blob/master/youtube_client_secret_example.json) file as a template too):  
 ```
 {
