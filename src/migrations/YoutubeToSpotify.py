@@ -160,7 +160,7 @@ class Migrator:
                 }
             ]
             new_playlist_name = prompt(question, style=custom_style_2)['new_playlist_name']
-            playlist_id = self.SpotifyAPI.create_playlist(song_list, new_playlist_name)            
+            playlist_id = self.SpotifyAPI.create_playlist(new_playlist_name)            
         else:
             # get spotify playlists
             user_playlists = self.SpotifyAPI.get_all_playlists()

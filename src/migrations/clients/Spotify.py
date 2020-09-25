@@ -217,7 +217,7 @@ class Client:
                 raise RequestError(response.status_code, response.text)
             return response.json()['id']
 
-    def create_playlist(self, songs, playlist_name):
+    def create_playlist(self, playlist_name):
         """Create new empty playlist and return playlist_id"""
         payload = {
             'name': playlist_name
