@@ -101,6 +101,7 @@ class Client:
 
     # API CALLS
     def get_all_playlists(self):
+        """get all playlists for authenticated user"""
         # print('Fetching your Youtube playlists...', end=" ")
         print('Fetching your Youtube playlists...\n')
         time.sleep(1)
@@ -130,7 +131,8 @@ class Client:
             # print(Fore.GREEN + 'Success.\n' + Style.RESET_ALL)
             return response
 
-    def get_playlist_items(self, id):        
+    def get_playlist_items(self, id):    
+        """get full details of videos for a given playlist id"""    
         print(f'\nFetching items from selected Youtube playlist...', end=" ")
         try: 
             request = self.client.playlistItems().list(
@@ -158,4 +160,24 @@ class Client:
             print(Fore.GREEN + 'Success.\n' + Style.RESET_ALL)
             return response
 
+    def get_search_result(self, query_str):
+        """
+        Get first youtube search result for given query string.
+        Return first video object or None
+        """
+        try:
+            request = self.client.search().list(
+                part="snippet",
+                maxResults=1,
+                q=query_str
+            )
+            response = request.execute()
+        except googleapiclient.errors.HttpError as err:
+            print(Style.BRIGHT + Back.RED + Fore.WHITE + 'ERROR' + Style.RESET_ALL)
+            raise RequestError(err.resp.status, err.content.decode('utf-8'))
+        else:
+            if len(response['items']) == 0:
+                return None                                                     # no results
+            else:
+                return response['items'][0]                                     # return first video
     

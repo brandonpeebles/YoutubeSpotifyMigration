@@ -5,6 +5,7 @@ from examples import custom_style_2
 import time
 
 import src.migrations.YoutubeToSpotify as YoutubeToSpotify
+import src.migrations.SpotifyToYoutube as SpotifyToYoutube
 
 def main():
     # print banner
@@ -21,8 +22,8 @@ def main():
         migrator = YoutubeToSpotify.Migrator()
         migrator.execute()
     else:
-        # run SpotifyToYoutube.Migrator()
-        pass
+        migrator = SpotifyToYoutube.Migrator()
+        migrator.execute()
 
 def get_transfer_direction():                     # fetch the user's playlists
     question = [                                                            # prompt user to select one
@@ -35,8 +36,7 @@ def get_transfer_direction():                     # fetch the user's playlists
                     'name': "Youtube ⭢  Spotify"
                 },
                 {
-                    'name': "Spotify ⭢  Youtube",
-                    'disabled': "Not yet available"
+                    'name': "Spotify ⭢  Youtube"
                 }
             ]
         }
