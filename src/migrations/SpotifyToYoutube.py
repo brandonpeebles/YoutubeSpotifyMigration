@@ -21,6 +21,12 @@ class Migrator:
     # MAIN
     def execute(self):
         spotify_playlist = self._get_playlist_from_input()
+        # cap playlists at 50 songs when going from Spotify to Youtube
+        # YouTube searches are expensive and inserts can't be done in bulk
+        if len(spotify_playlist['items']) > 50:
+            print(Style.BRIGHT + Back.RED + Fore.WHITE + 'ERROR:' + Style.RESET_ALL)
+            print(Style.NORMAL + Fore.RED + 'Migrating playlists over 50 songs in length is currently not supported when transferring from Spotify to YouTube. Please choose a shorter playlist. Terminating...' + Style.RESET_ALL)
+            sys.exit()
         if self._get_youtube_matches(spotify_playlist['items']) is False:
             print(Style.BRIGHT + Back.RED + Fore.WHITE + 'ERROR:' + Style.RESET_ALL)
             print(Style.NORMAL + Fore.RED + 'No matches found. Terminating...' + Style.RESET_ALL)
@@ -84,7 +90,7 @@ class Migrator:
             else:
                 print(Fore.RED + "No match found." + Style.RESET_ALL)
             self._songs.append(song)
-            time.sleep(0.2)                                                       # wait to not exceed youtube quota
+            time.sleep(0.2)                                                     # wait to not exceed youtube quota
         print()
         return no_matches_found == False
 
