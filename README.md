@@ -17,7 +17,7 @@ User-friendly command line interface written in Python for migrating playlists b
 ## Overview  
 
 <p align="center">
-  <img src="https://github.com/peeblesbrandon/YouTubeSpotifyMigration/blob/master/img/welcome_and_auth.png" width="500" />
+  <img src="https://github.com/peeblesbrandon/YoutubeSpotifyMigration/blob/master/img/welcome_and_auth.png" width="500" />
 </p>   
  
 ### Walkthrough
@@ -25,26 +25,26 @@ User-friendly command line interface written in Python for migrating playlists b
 2. **Authentication:** It will then attempt to automatically log you in (if has your credentials stored from a previous run)  
 
 <p align="center">
-  <img src="https://github.com/peeblesbrandon/YouTubeSpotifyMigration/blob/master/img/authentication.gif" width="500" />
+  <img src="https://github.com/peeblesbrandon/YoutubeSpotifyMigration/blob/master/img/authentication.gif" width="500" />
 </p>   
  
 3. **Select playlist to transfer:** You will be prompted to select a playlist to transfer songs from.  
 4. **Automatic song matching:** The app will then attempt to match these songs against the other service's library using their APIs. It will flag any it couldn't find a match for. The app parses the YouTube title and first tries to search for songs in the format _Artist - Track_ and will attempt the reverse if no matches are found. 
 
 <p align="center">
-  <img src="https://github.com/peeblesbrandon/YouTubeSpotifyMigration/blob/master/img/song_matching.gif" width="500" />
+  <img src="https://github.com/peeblesbrandon/YoutubeSpotifyMigration/blob/master/img/song_matching.gif" width="500" />
 </p>   
  
 5. **Confirm song matches:** You will then be prompted to confirm the songs to transfer. All are selected by default. It may have made a mistake matching, so this is your chance to remove those before continuing. Press space to add/remove a song; press enter to continue.  
 
 <p align="center">
-  <img src="https://github.com/peeblesbrandon/YouTubeSpotifyMigration/blob/master/img/match_confirmation.gif" width="500" />
+  <img src="https://github.com/peeblesbrandon/YoutubeSpotifyMigration/blob/master/img/match_confirmation.gif" width="500" />
 </p>   
  
 6. **Add to new or existing playlist:** You'll then be asked whether you want to add to an existing playlist or create a new one. If adding, you'll be presented with a list of your playlists. If creating a new playlist, you'll be prompted to provide a name.   
  
 <p align="center">
-  <img src="https://github.com/peeblesbrandon/YouTubeSpotifyMigration/blob/master/img/select_playlist_destination.png" width="500" />
+  <img src="https://github.com/peeblesbrandon/YoutubeSpotifyMigration/blob/master/img/select_playlist_destination.png" width="500" />
 </p>  
 
 7. **App automatically adds songs:** The app will then add all of the chosen songs into the playlist and return a URL to it.
@@ -54,14 +54,24 @@ In order to run the app, you'll first need to clone the repository and install t
 
 **Clone the repo:**  
 ```
-git clone https://github.com/peeblesbrandon/YouTubeSpotifyMigration.git
+git clone https://github.com/peeblesbrandon/YoutubeSpotifyMigration.git
 ```  
 
+**Switch into the application directory:**  
+```
+cd YoutubeSpotifyMigration
+```  
+  
+**Create and enable a virtual environment (recommended):**  
+```
+python3 -m venv env
+source env/bin/activate
+```  
+  
 **Install required packages (using pip):**  
 ```
-cd YouTubeSpotifyMigration
 pip install -r requirements.txt
-```  
+```
 
 ## Authentication Setup  
 The app authenticates its API clients using OAuth 2.0. On the YouTube (Google) side, this is implemented using the `google-auth-oauthlib` package ([docs](http://google-auth-oauthlib.readthedocs.io)). On the Spotify side, this has been implemented through a custom built set of classes (`Spotify.py` and `SpotifyCredentials.py`) which performs their [Authorization Code Flow](https://developer.spotify.com/documentation/general/guides/authorization-guide/#authorization-code-flow). With either platform, once we've successfully authenticated and received tokens, we pickle these and store them locally to easily authenticate in the future or refresh with new tokens. 
