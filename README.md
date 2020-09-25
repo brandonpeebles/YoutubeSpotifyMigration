@@ -1,7 +1,7 @@
 # YouTubeSpotifyMigration
 > _Transfer your playlists between YouTube and Spotify_  
 
-User-friendly command line interface written in Python for migrating playlists between YouTube and Spotify. Makes use of OAuth 2.0 authentication to connect the program to both Google and Spotify's respective APIs and stores the refresh tokens locally so logging in should only need to be done once. Once authenticated, it can then make API calls to fetch the user's current playlists and match songs across platforms.  
+User-friendly command line interface written in Python for migrating playlists between YouTube and Spotify (currently only supports YouTube -> Spotify). Makes use of OAuth 2.0 authentication to connect the program to both Google and Spotify's respective APIs and stores the refresh tokens locally so logging in should only need to be done once. Once authenticated, it can then make API calls to fetch the user's current playlists and match songs across platforms.  
 
 ## Table of Contents  
 - [Overview](#overview)
@@ -28,7 +28,7 @@ User-friendly command line interface written in Python for migrating playlists b
   <img src="https://github.com/peeblesbrandon/YoutubeSpotifyMigration/blob/master/img/authentication.gif" width="500" />
 </p>   
  
-3. **Select playlist to transfer:** You will be prompted to select a playlist to transfer songs from. **Note:** If transferring from Spotify to YouTube, playlist length is capped at 50 songs due to free tier API quota limitations with YouTube.
+3. **Select playlist to transfer:** You will be prompted to select a playlist to transfer songs from.  
 4. **Automatic song matching:** The app will then attempt to match these songs against the other service's library using their APIs. It will flag any it couldn't find a match for. The app parses the YouTube title and first tries to search for songs in the format _Artist - Track_ and will attempt the reverse if no matches are found. 
 
 <p align="center">
@@ -79,15 +79,12 @@ The app authenticates its API clients using OAuth 2.0. On the YouTube (Google) s
 To get started, you'll need to obtain the varous API keys, client IDs, secrets, etc. required for both platforms in order to connect to their APIs.  
   
 ### YouTube
-You will need to obtain two main pieces of information, an API key and a client secrets JSON file. To get both of these, follow all of the instructions for *Step 1* on Google's documentation [here](https://developers.google.com/youtube/v3/quickstart/python#step_1_set_up_your_project_and_credentials). You can name your project YouTubeSpotifyMigration or anything you'd like really. The application type `Other` might not be available as the instructions say, so you can choose `Other UI`, `Other non-UI`, or `installed` instead.  
- |OAath Consent Screen Setup|Credentials Screen|
- |--------------------------|------------------|
- |<img src="https://github.com/peeblesbrandon/YoutubeSpotifyMigration/blob/master/img/consent_screen_setup.png" width="100%" />|<img src="https://github.com/peeblesbrandon/YoutubeSpotifyMigration/blob/master/img/youtube_credentials.png" width="100%" />|  
- 
+You will need to obtain two main pieces of information, an API key and a client secrets JSON file. To get both of these, follow all of the instructions for *Step 1* on Google's documentation [here](https://developers.google.com/youtube/v3/quickstart/python#step_1_set_up_your_project_and_credentials). You can name your project YouTubeSpotifyMigration or anything you'd like really. The application type `Other` might not be available as the instructions say, so you can choose `Other UI`, `Other non-UI`, or `installed` instead. When creating your OAuth client id, select `Desktop app`.
+  
 When selecting your application's OAuth consent screen, you'll be asked to select scopes. Search for YouTube and select the following:  
   
 <p align="center">
-  <img src="https://github.com/peeblesbrandon/YoutubeSpotifyMigration/blob/master/img/select_youtube_scopes.png" width="100%" />
+  <img src="https://github.com/peeblesbrandon/YoutubeSpotifyMigration/blob/master/img/select_youtube_scopes.png" width="500" />
 </p>  
   
 Once you have all of that information, you can create a file called `youtube_client_secret.json` in the root directory of your program and populate it with the credentials you receieved. It should have **exactly** the following format (you can also reference the [`youtube_client_secret_example.json`](https://github.com/peeblesbrandon/YouTubeSpotifyMigration/blob/master/youtube_client_secret_example.json) file as a template too):  
@@ -108,7 +105,7 @@ Once you have all of that information, you can create a file called `youtube_cli
   
 ### Spotify
 You will need a similar file for Spotify.  
-``` 
+```
 {
     "client_id": "your_client_id",
     "client_secret": "your_client_secret",
