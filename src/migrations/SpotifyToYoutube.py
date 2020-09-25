@@ -136,6 +136,7 @@ class Migrator:
         return [self._songs[i]['youtube_match'] for i in selected_indices]
         
     def _transfer_songs(self, video_list, youtube_playlist_title):
+        print("\nTransferring your playlist...\n")
         question = [                                                            # prompt user to select one
             {
                 'type': 'list',
