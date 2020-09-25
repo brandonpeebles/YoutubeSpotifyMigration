@@ -237,7 +237,7 @@ class Client:
         """Fetch and return all playlists associated with authenticated user"""
         print(f"\nFetching your Spotify playlists...", end=" ")
         # build and execute request
-        request_url = "https://api.spotify.com/v1/me/playlists?limit=50"
+        request_url = f"https://api.spotify.com/v1/me/playlists?limit=50"
         headers = {
                 "Content-Type": "application/json",
                 "Authorization": f"Bearer {self.creds.access_token()}"
@@ -249,7 +249,7 @@ class Client:
         response = response.json()
         nextURL = response['next']
         while nextURL is not None:
-            nextResponse = requests.get(nextURL, headers)
+            nextResponse = requests.get(nextURL, headers=headers)
             if response.status_code != 200:
                 raise RequestError(response.status_code, response.text)
             response['items'].extend(nextResponse.json()['items'])
@@ -258,10 +258,12 @@ class Client:
         return response['items']
 
     def get_playlist_items(self, playlist_id):
-        """Get full details of the tracks or episodes of a playlist owned by a Spotify user"""
-        print(f'\nFetching items from selected Youtube playlist...', end=" ")
+        """
+        Get full details of the tracks or episodes of a playlist owned by a Spotify user
+        """
+        print(f'\nFetching items from selected Spotify playlist...', end=" ")
         # build and execute request
-        request_url = "https://api.spotify.com/v1/playlists/{playlist_id}/tracks"
+        request_url = f"https://api.spotify.com/v1/playlists/{playlist_id}/tracks"
         headers = {
                 "Content-Type": "application/json",
                 "Authorization": f"Bearer {self.creds.access_token()}"
@@ -273,7 +275,7 @@ class Client:
         response = response.json()
         nextURL = response['next']
         while nextURL is not None:
-            nextResponse = requests.get(nextURL, headers)
+            nextResponse = requests.get(nextURL, headers=headers)
             if response.status_code != 200:
                 raise RequestError(response.status_code, response.text)
             response['items'].extend(nextResponse.json()['items'])
