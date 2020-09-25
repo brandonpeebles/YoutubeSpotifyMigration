@@ -84,6 +84,7 @@ class Migrator:
             else:
                 print(Fore.RED + "No match found." + Style.RESET_ALL)
             self._songs.append(song)
+            time.sleep(0.2)                                                       # wait to not exceed youtube quota
         print()
         return no_matches_found == False
 

@@ -233,6 +233,7 @@ class Client:
                     }
                 )
                 request.execute()
+                time.sleep(0.2)                                                   # wait 1 sec to not exceed youtube quota
         except googleapiclient.errors.HttpError as err:
             print(Style.BRIGHT + Back.RED + Fore.WHITE + 'ERROR' + Style.RESET_ALL)
             raise RequestError(err.resp.status, err.content.decode('utf-8'))
