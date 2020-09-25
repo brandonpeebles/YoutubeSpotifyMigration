@@ -246,15 +246,16 @@ class Client:
         if response.status_code != 200:
             raise RequestError(response.status_code, response.text)
         # handle responses that exceed item limit and require pagination
+        response = response.json()
         nextURL = response['next']
         while nextURL is not None:
             nextResponse = requests.get(nextURL, headers)
             if response.status_code != 200:
                 raise RequestError(response.status_code, response.text)
-            response['items'].extend(nextResponse['items'])
+            response['items'].extend(nextResponse.json()['items'])
             nextURL = response['next']
         print(Fore.GREEN + 'Success.\n' + Style.RESET_ALL)
-        return response.json()['items']
+        return response['items']
 
     def get_playlist_items(self, playlist_id):
         """Get full details of the tracks or episodes of a playlist owned by a Spotify user"""
@@ -269,15 +270,16 @@ class Client:
         if response.status_code != 200:
             raise RequestError(response.status_code, response.text)
         # handle responses that exceed item limit and require pagination
+        response = response.json()
         nextURL = response['next']
         while nextURL is not None:
             nextResponse = requests.get(nextURL, headers)
             if response.status_code != 200:
                 raise RequestError(response.status_code, response.text)
-            response['items'].extend(nextResponse['items'])
+            response['items'].extend(nextResponse.json()['items'])
             nextURL = response['next']
         print(Fore.GREEN + 'Success.\n' + Style.RESET_ALL)
-        return response.json()['items']
+        return response['items']
 
     def add_songs_to_playlist(self, songs, playlist_id):
         """
