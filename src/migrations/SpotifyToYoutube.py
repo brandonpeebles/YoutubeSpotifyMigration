@@ -26,7 +26,7 @@ class Migrator:
             print(Style.NORMAL + Fore.RED + 'No matches found. Terminating...' + Style.RESET_ALL)
             sys.exit()
         video_list = self._confirm_youtube_matches()
-        # self._transfer_songs(uri_list, youtube_playlist['title'])
+        self._transfer_songs(video_list, spotify_playlist['name'])
     
     # HELPER METHODS
     def _get_playlist_from_input(self):
@@ -151,7 +151,8 @@ class Migrator:
                 }
             ]
             new_playlist_name = prompt(question, style=custom_style_2)['new_playlist_name']
-            playlist_id = self.SpotifyAPI.create_playlist(song_list, new_playlist_name)            
+            playlist_id = self.YoutubeAPI.create_playlist(new_playlist_name)            
+            print(playlist_id)
         else:
             # get spotify playlists
             user_playlists = self.SpotifyAPI.get_all_playlists()
@@ -179,6 +180,6 @@ class Migrator:
             # get the playlist_id
             playlist_id = user_playlists[selectedIndex]['id']
         # add to songs to new or selected playlist and print out the URL
-        playlist_URL = self.SpotifyAPI.add_songs_to_playlist(song_list, playlist_id)
-        print(Fore.YELLOW + f"\nDone! Playlist available at:", end=" ")
-        print(Fore.BLUE + playlist_URL + Style.RESET_ALL + "\n")
+        # playlist_URL = self.SpotifyAPI.add_songs_to_playlist(song_list, playlist_id)
+        # print(Fore.YELLOW + f"\nDone! Playlist available at:", end=" ")
+        # print(Fore.BLUE + playlist_URL + Style.RESET_ALL + "\n")

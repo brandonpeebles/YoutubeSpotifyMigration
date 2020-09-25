@@ -181,3 +181,33 @@ class Client:
             else:
                 return response['items'][0]                                     # return first video
     
+    def create_playlist(self, playlist_name):
+        """
+        Creates a new empty playlist and returns its playlist_id
+        Defaults privacy status to public
+        """
+        try:
+            request = self.client.playlists().insert(
+            part="snippet,status",
+            body={
+            "snippet": {
+                    "title": playlist_name,
+                    "description": "Created via YouTubeSpotifyMigration.",
+                    "tags": [
+                        "YouTubeSpotifyMigration",
+                        "API call",
+                        "music"
+                    ],
+                    "defaultLanguage": "en"
+                },
+                "status": {
+                    "privacyStatus": "public"
+                }
+                }
+            )
+            response = request.execute()
+        except googleapiclient.errors.HttpError as err:
+            print(Style.BRIGHT + Back.RED + Fore.WHITE + 'ERROR' + Style.RESET_ALL)
+            raise RequestError(err.resp.status, err.content.decode('utf-8'))
+        else:
+            return response['id']
