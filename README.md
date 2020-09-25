@@ -1,4 +1,4 @@
-# YouTubeSpotifyMigration
+# YouTubeSpotifyMigration 🎵
 > _Transfer your playlists between YouTube and Spotify_  
 
 User-friendly command line interface written in Python for migrating playlists between YouTube and Spotify. Makes use of OAuth 2.0 authentication to connect the program to both Google and Spotify's respective APIs and stores the refresh tokens locally so logging in should only need to be done once. Once authenticated, it can then make API calls to fetch the user's current playlists and match songs across platforms.  
