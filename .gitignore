@@ -139,6 +139,7 @@ cython_debug/
 
 # VS Code
 .vscode
+.DS_store
 
 # secrets
 *client_secret.json

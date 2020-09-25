@@ -168,6 +168,7 @@ class Client:
         try:
             request = self.client.search().list(
                 part="snippet",
+                type="video",
                 maxResults=1,
                 q=query_str
             )
@@ -211,3 +212,28 @@ class Client:
             raise RequestError(err.resp.status, err.content.decode('utf-8'))
         else:
             return response['id']
+
+    def add_videos_to_playlist(self, video_list, playlist_id):
+        """
+        Add videos iteratively to playlist by its id
+        Return URL to playlist
+        """
+        try:
+            for video in video_list:
+                request = self.client.playlistItems().insert(
+                    part="snippet",
+                    body={
+                    "snippet": {
+                        "playlistId": playlist_id,
+                        "resourceId": {
+                            "kind": video['id']['kind'],
+                            "videoId": video['id']['videoId']
+                        }
+                    }
+                    }
+                )
+                request.execute()
+        except googleapiclient.errors.HttpError as err:
+            print(Style.BRIGHT + Back.RED + Fore.WHITE + 'ERROR' + Style.RESET_ALL)
+            raise RequestError(err.resp.status, err.content.decode('utf-8'))
+        return f"https://www.youtube.com/playlist?list={playlist_id}"

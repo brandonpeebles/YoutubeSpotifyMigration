@@ -94,26 +94,32 @@ class Migrator:
         They may uncheck any box to skip over during transfer
         If no match found, checkbox should be disabled
         """
-        questions = [
-            {
-                'type': 'checkbox',
-                'message': 'Confirm songs for transfer. Uncheck to skip.',
-                'name': 'transfer_list',
-                'choices': [
-                    {
-                        # 'value': idx, causes bug where 'checked' is ignored -- will parse index out of name
-                        'name': (str(idx + 1) + ': ' + song['youtube_match']['snippet']['title'] 
-                                if song['youtube_match'] 
-                                else str(idx + 1) + ': ' + song['spotify_artist'] + " - " + song['spotify_track']),
-                        'checked': True if song['youtube_match'] is not None else False,
-                        'disabled': False if song['youtube_match'] is not None else "No match found"
-                    } for idx, song in enumerate(self._songs)
-                ],
-                'validate': lambda answer: 'You must choose at least one song to transfer.' \
-                    if len(answer) == 0 else True
-            }
-        ]
-        answers = prompt(questions, style=custom_style_2)
+        answers = {}
+        answers['transfer_list'] = []
+        while len(answers['transfer_list']) == 0:
+            questions = [
+                {
+                    'type': 'checkbox',
+                    'message': 'Confirm songs for transfer. Uncheck to skip.',
+                    'name': 'transfer_list',
+                    'choices': [
+                        {
+                            # 'value': idx, causes bug where 'checked' is ignored -- will parse index out of name
+                            'name': (str(idx + 1) + ': ' + song['youtube_match']['snippet']['title'] 
+                                    if song['youtube_match'] 
+                                    else str(idx + 1) + ': ' + song['spotify_artist'] + " - " + song['spotify_track']),
+                            'checked': True if song['youtube_match'] is not None else False,
+                            'disabled': False if song['youtube_match'] is not None else "No match found"
+                        } for idx, song in enumerate(self._songs)
+                    ],
+                    # validation for checkboxes broken in package - need to refactor
+                    # could use Questionary instead: https://github.com/tmbo/questionary
+                    # using while loop as quick fix
+                    'validate': lambda answer: 'You must choose at least one song to transfer.' \
+                        if len(answer) == 0 else True
+                }
+            ]
+            answers = prompt(questions, style=custom_style_2)
         # filter our songs list for just the ones selected by the user
         selected_indices = []
         for song in answers['transfer_list']:
@@ -122,7 +128,7 @@ class Migrator:
             selected_indices.append(original_idx)
         return [self._songs[i]['youtube_match'] for i in selected_indices]
         
-    def _transfer_songs(self, song_list, youtube_playlist_title):
+    def _transfer_songs(self, video_list, youtube_playlist_title):
         question = [                                                            # prompt user to select one
             {
                 'type': 'list',
@@ -151,8 +157,7 @@ class Migrator:
                 }
             ]
             new_playlist_name = prompt(question, style=custom_style_2)['new_playlist_name']
-            playlist_id = self.YoutubeAPI.create_playlist(new_playlist_name)            
-            print(playlist_id)
+            playlist_id = self.YoutubeAPI.create_playlist(new_playlist_name)  
         else:
             # get spotify playlists
             user_playlists = self.YoutubeAPI.get_all_playlists()['items']
@@ -175,8 +180,7 @@ class Migrator:
             selectedIndex = answer['selectedPlaylist']
             # get the playlist_id
             playlist_id = user_playlists[selectedIndex]['id']
-            print(playlist_id)
         # add to songs to new or selected playlist and print out the URL
-        # playlist_URL = self.SpotifyAPI.add_songs_to_playlist(song_list, playlist_id)
-        # print(Fore.YELLOW + f"\nDone! Playlist available at:", end=" ")
-        # print(Fore.BLUE + playlist_URL + Style.RESET_ALL + "\n")
+        playlist_URL = self.YoutubeAPI.add_videos_to_playlist(video_list, playlist_id)
+        print(Fore.YELLOW + f"\nDone! Playlist available at:", end=" ")
+        print(Fore.BLUE + playlist_URL + Style.RESET_ALL + "\n")
