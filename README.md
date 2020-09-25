@@ -89,7 +89,7 @@ You will need to obtain two main pieces of information, an API key and a client 
 When selecting your application's OAuth consent screen, you'll be asked to select scopes. Search for YouTube and select the following:  
   
 <p align="center">
-  <img src="https://github.com/peeblesbrandon/YoutubeSpotifyMigration/blob/master/img/select_youtube_scopes.png" width="500" />
+  <img src="https://github.com/peeblesbrandon/YoutubeSpotifyMigration/blob/master/img/select_youtube_scopes.png" width="100%" />
 </p>  
   
 Once you have all of that information, you can create a file called `youtube_client_secret.json` in the root directory of your program and populate it with the credentials you receieved. It should have **exactly** the following format (you can also reference the [`youtube_client_secret_example.json`](https://github.com/peeblesbrandon/YouTubeSpotifyMigration/blob/master/youtube_client_secret_example.json) file as a template too):  
