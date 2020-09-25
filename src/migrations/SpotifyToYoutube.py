@@ -155,10 +155,8 @@ class Migrator:
             print(playlist_id)
         else:
             # get spotify playlists
-            user_playlists = self.SpotifyAPI.get_all_playlists()
-            # prompt for selection and
-            # filter out playlists that the user can\'t modify
-            user_id = self.SpotifyAPI.get_user_id()
+            user_playlists = self.YoutubeAPI.get_all_playlists()['items']
+            # prompt for selection 
             question = [                                                            # prompt user to select one
                 {
                     'type': 'list',
@@ -167,18 +165,17 @@ class Migrator:
                     'choices': [
                         {
                             'value': idx, 
-                            'name': playlist["name"]
+                            'name': playlist['snippet']['title']
                             # 'disabled': False if (playlist['owner']['id'] == user_id or playlist['collaborative'] == True) 
                             #     else "Unable to modify this playlist" 
-                        } for idx, playlist in enumerate(user_playlists) 
-                            if (playlist['owner']['id'] == user_id 
-                                or playlist['collaborative'] == True)]
+                        } for idx, playlist in enumerate(user_playlists) ]
                 }
             ]
             answer = prompt(question, style=custom_style_2)
             selectedIndex = answer['selectedPlaylist']
             # get the playlist_id
             playlist_id = user_playlists[selectedIndex]['id']
+            print(playlist_id)
         # add to songs to new or selected playlist and print out the URL
         # playlist_URL = self.SpotifyAPI.add_songs_to_playlist(song_list, playlist_id)
         # print(Fore.YELLOW + f"\nDone! Playlist available at:", end=" ")
