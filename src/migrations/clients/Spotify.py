@@ -245,6 +245,14 @@ class Client:
         response = requests.get(request_url, headers=headers)
         if response.status_code != 200:
             raise RequestError(response.status_code, response.text)
+        # handle responses that exceed item limit and require pagination
+        nextURL = response['next']
+        while nextURL is not None:
+            nextResponse = requests.get(nextURL, headers)
+            if response.status_code != 200:
+                raise RequestError(response.status_code, response.text)
+            response['items'].extend(nextResponse['items'])
+            nextURL = response['next']
         print(Fore.GREEN + 'Success.\n' + Style.RESET_ALL)
         return response.json()['items']
 
