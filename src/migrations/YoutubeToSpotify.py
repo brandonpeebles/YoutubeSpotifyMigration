@@ -59,7 +59,7 @@ class Migrator:
         Instead, manually parse the video title. Most follow a similar format:
         {Artist name} - {Track name} {(Optional Parenthetical Statement that gets ignored here)}
         """
-        print('Matching Youtube videos to Spotify songs.')
+        print('Matching YouTube videos to Spotify songs.')
         # iterate through youtube playlist and search spotify for match
         no_matches_found = True # will remain true if none are found
         for item in items:
