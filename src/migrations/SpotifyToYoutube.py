@@ -25,7 +25,7 @@ class Migrator:
             print(Style.BRIGHT + Back.RED + Fore.WHITE + 'ERROR:' + Style.RESET_ALL)
             print(Style.NORMAL + Fore.RED + 'No matches found. Terminating...' + Style.RESET_ALL)
             sys.exit()
-        # uri_list = self._confirm_spotify_matches()
+        video_list = self._confirm_youtube_matches()
         # self._transfer_songs(uri_list, youtube_playlist['title'])
     
     # HELPER METHODS
@@ -57,7 +57,7 @@ class Migrator:
         
     def _get_youtube_matches(self, items):
         """
-        Fetch list of YouTube search results for given array of Spotify songs
+        Fetch YouTube search result for given array of Spotify songs
         Searches for videos using the following query format:
         {Artist name} - {Track name} 
         """
@@ -87,10 +87,10 @@ class Migrator:
         print()
         return no_matches_found == False
 
-    def _confirm_spotify_matches(self):
+    def _confirm_youtube_matches(self):
         """
         Prompt user with checkbox list of matches from search results
-        Ask them to confirm the list before proceeding to transfer to Spotify
+        Ask them to confirm the list before proceeding to transfer to YouTube
         They may uncheck any box to skip over during transfer
         If no match found, checkbox should be disabled
         """
@@ -102,11 +102,11 @@ class Migrator:
                 'choices': [
                     {
                         # 'value': idx, causes bug where 'checked' is ignored -- will parse index out of name
-                        'name': (str(idx + 1) + ': ' + song['spotify_match']['artists'][0]['name'] + ' - ' + song['spotify_match']['name'] 
-                                if song['spotify_match'] 
-                                else str(idx + 1) + ': ' + song['youtube_title']),
-                        'checked': True if song['spotify_match'] is not None else False,
-                        'disabled': False if song['spotify_match'] is not None else "No match found"
+                        'name': (str(idx + 1) + ': ' + song['youtube_match']['snippet']['title'] 
+                                if song['youtube_match'] 
+                                else str(idx + 1) + ': ' + song['spotify_artist'] + " - " + song['spotify_track']),
+                        'checked': True if song['youtube_match'] is not None else False,
+                        'disabled': False if song['youtube_match'] is not None else "No match found"
                     } for idx, song in enumerate(self._songs)
                 ],
                 'validate': lambda answer: 'You must choose at least one song to transfer.' \
@@ -120,7 +120,7 @@ class Migrator:
             colon_idx = song.find(':')
             original_idx = int(song[0:colon_idx]) - 1
             selected_indices.append(original_idx)
-        return [self._songs[i]['spotify_match']['uri'] for i in selected_indices]
+        return [self._songs[i]['youtube_match'] for i in selected_indices]
         
     def _transfer_songs(self, song_list, youtube_playlist_title):
         question = [                                                            # prompt user to select one
