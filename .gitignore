@@ -144,6 +144,8 @@ cython_debug/
 # secrets
 *client_secret.json
 youtube_client_secret.json
+youtube_client_secret_alt.json
+youtube_client_secret_og.json
 youtube_token.pickle
 spotify_token.pickle
 *.pickle
