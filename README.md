@@ -22,6 +22,11 @@ User-friendly command line interface written in Python for migrating playlists b
  
 ### Walkthrough
 1. **Choose a transfer direction:** Upon initializing, `YouTubeSpotifyMigration` will ask whether you want to transfer playlists from YouTube to Spotify or the other way around. 
+
+<p align="center">
+  <img src="https://github.com/peeblesbrandon/YoutubeSpotifyMigration/blob/master/img/select_direction.gif" width="500" />
+</p>   
+ 
 2. **Authentication:** It will then attempt to automatically log you in (if has your credentials stored from a previous run)  
 
 <p align="center">
