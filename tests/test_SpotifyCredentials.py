@@ -7,6 +7,7 @@ from src.migrations.clients.credentials.SpotifyCredentials import Credentials
 class TestSpotifyCredentials(unittest.TestCase):
     @classmethod
     def setUpClass(self):
+        print("\nTEST SPOTIFY CREDENTIALS:")
         creds_json = json.loads(
         """
             {
