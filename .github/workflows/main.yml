@@ -1,5 +1,5 @@
 on: push
-name: on push
+name: test_on_push
 jobs:
   gitHubActionForUnittest:
     name: GitHub Action for Python unittest
