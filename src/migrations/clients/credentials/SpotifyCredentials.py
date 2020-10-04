@@ -28,8 +28,11 @@ class Credentials:
         return self._auth_header
 
     def _set_expiry(self, expires_in):
-        """setter for expiry"""
-        self._expiry = datetime.now() + timedelta(seconds=expires_in)
+        """setter for expiry. Value must be greater than zero"""
+        if expires_in > 0:
+            self._expiry = datetime.now() + timedelta(seconds=expires_in)
+        else:
+            raise ValueError("argument 'expires_in' must be greater than zero")
     
     def expired(self):
         """Returns true if current access token is expired. False otherwise."""
