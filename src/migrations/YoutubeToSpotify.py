@@ -1,13 +1,14 @@
 import src.migrations.clients.Youtube as Youtube
 import src.migrations.clients.Spotify as Spotify
-from pprint import pprint
-from PyInquirer import prompt, Separator
+from PyInquirer import prompt
 from examples import custom_style_2
-import sys, json, time
+import sys
 from colorama import Fore, Back, Style
+
 
 class Migrator:
     """Migration class for Youtube -> Spotify"""
+
     def __init__(self):
         # initialize and authenticate Youtube client instances
         self.YoutubeAPI = Youtube.Client()
@@ -22,36 +23,40 @@ class Migrator:
     def execute(self):
         youtube_playlist = self._get_playlist_from_input()
         if self._get_spotify_matches(youtube_playlist['items']) is False:
-            print(Style.BRIGHT + Back.RED + Fore.WHITE + 'ERROR:' + Style.RESET_ALL)
-            print(Style.NORMAL + Fore.RED + 'No matches found. Terminating...' + Style.RESET_ALL)
+            print(Style.BRIGHT + Back.RED + Fore.WHITE +
+                  'ERROR:' + Style.RESET_ALL)
+            print(Style.NORMAL + Fore.RED +
+                  'No matches found. Terminating...' + Style.RESET_ALL)
             sys.exit()
         uri_list = self._confirm_spotify_matches()
         self._transfer_songs(uri_list, youtube_playlist['title'])
-    
+
     # HELPER METHODS
     def _get_playlist_from_input(self):
         """
         Fetch Youtube playlists for user.
         Ask them to choose one for transferring.
         """
-        playlists = self.YoutubeAPI.get_all_playlists()                         # fetch the user's playlists
+        playlists = self.YoutubeAPI.get_all_playlists(
+        )                         # fetch the user's playlists
         question = [                                                            # prompt user to select one
             {
                 'type': 'list',
                 'name': 'selectedPlaylist',
                 'message': "Which Youtube playlist would you like to transfer to Spotify?",
-                'choices': [{'value': idx, 'name': item["snippet"]["title"]} 
-                    for idx, item in enumerate(playlists["items"])]
+                'choices': [{'value': idx, 'name': item["snippet"]["title"]}
+                            for idx, item in enumerate(playlists["items"])]
             }
         ]
         answer = prompt(question, style=custom_style_2)
         selectedIndex = answer['selectedPlaylist']
         selectedPlaylistId = playlists['items'][selectedIndex]['id']
         selectedPlaylistTitle = playlists['items'][selectedIndex]['snippet']['title']
-        playlist_items = self.YoutubeAPI.get_playlist_items(selectedPlaylistId)          
-        playlist_items['title'] = selectedPlaylistTitle                         # add playlist title onto the obj
+        playlist_items = self.YoutubeAPI.get_playlist_items(selectedPlaylistId)
+        # add playlist title onto the obj
+        playlist_items['title'] = selectedPlaylistTitle
         return playlist_items
-        
+
     def _get_spotify_matches(self, items):
         """
         Fetch list of spotify search results for given array of Youtube videos.
@@ -61,7 +66,7 @@ class Migrator:
         """
         print('Matching YouTube videos to Spotify songs.')
         # iterate through youtube playlist and search spotify for match
-        no_matches_found = True # will remain true if none are found
+        no_matches_found = True  # will remain true if none are found
         for item in items:
             title = item['snippet']['title']
             print(f"Searching Spotify for: {title}")
@@ -114,9 +119,9 @@ class Migrator:
                     'choices': [
                         {
                             # 'value': idx, causes bug where 'checked' is ignored -- will parse index out of name
-                            'name': (str(idx + 1) + ': ' + song['spotify_match']['artists'][0]['name'] + ' - ' + song['spotify_match']['name'] 
-                                    if song['spotify_match'] 
-                                    else str(idx + 1) + ': ' + song['youtube_title']),
+                            'name': (str(idx + 1) + ': ' + song['spotify_match']['artists'][0]['name'] + ' - ' + song['spotify_match']['name']
+                                     if song['spotify_match']
+                                     else str(idx + 1) + ': ' + song['youtube_title']),
                             'checked': True if song['spotify_match'] is not None else False,
                             'disabled': False if song['spotify_match'] is not None else "No match found"
                         } for idx, song in enumerate(self._songs)
@@ -125,7 +130,7 @@ class Migrator:
                     # could use Questionary instead: https://github.com/tmbo/questionary
                     # using while loop as quick fix
                     'validate': lambda answer: 'You must choose at least one song to transfer.' \
-                        if len(answer) == 0 else True
+                    if len(answer) == 0 else True
                 }
             ]
             answers = prompt(questions, style=custom_style_2)
@@ -136,7 +141,7 @@ class Migrator:
             original_idx = int(song[0:colon_idx]) - 1
             selected_indices.append(original_idx)
         return [self._songs[i]['spotify_match']['uri'] for i in selected_indices]
-        
+
     def _transfer_songs(self, song_list, youtube_playlist_title):
         question = [                                                            # prompt user to select one
             {
@@ -161,12 +166,13 @@ class Migrator:
                     'name': 'new_playlist_name',
                     'message': 'Enter a name for your new playlist:',
                     'default': youtube_playlist_title,
-                    'validate': lambda answer: 'You must enter a name for your playlist.' \
+                    'validate': lambda answer: 'You must enter a name for your playlist.'
                     if len(answer) == 0 else True
                 }
             ]
-            new_playlist_name = prompt(question, style=custom_style_2)['new_playlist_name']
-            playlist_id = self.SpotifyAPI.create_playlist(new_playlist_name)            
+            new_playlist_name = prompt(question, style=custom_style_2)[
+                'new_playlist_name']
+            playlist_id = self.SpotifyAPI.create_playlist(new_playlist_name)
         else:
             # get spotify playlists
             user_playlists = self.SpotifyAPI.get_all_playlists()
@@ -180,13 +186,13 @@ class Migrator:
                     'message': "Which playlist would you like to transfer the songs to?",
                     'choices': [
                         {
-                            'value': idx, 
+                            'value': idx,
                             'name': playlist["name"]
-                            # 'disabled': False if (playlist['owner']['id'] == user_id or playlist['collaborative'] == True) 
-                            #     else "Unable to modify this playlist" 
-                        } for idx, playlist in enumerate(user_playlists) 
-                            if (playlist['owner']['id'] == user_id 
-                                or playlist['collaborative'] == True)]
+                            # 'disabled': False if (playlist['owner']['id'] == user_id or playlist['collaborative'] == True)
+                            #     else "Unable to modify this playlist"
+                        } for idx, playlist in enumerate(user_playlists)
+                        if (playlist['owner']['id'] == user_id
+                            or playlist['collaborative'] == True)]
                 }
             ]
             answer = prompt(question, style=custom_style_2)
@@ -194,6 +200,7 @@ class Migrator:
             # get the playlist_id
             playlist_id = user_playlists[selectedIndex]['id']
         # add to songs to new or selected playlist and print out the URL
-        playlist_URL = self.SpotifyAPI.add_songs_to_playlist(song_list, playlist_id)
+        playlist_URL = self.SpotifyAPI.add_songs_to_playlist(
+            song_list, playlist_id)
         print(Fore.YELLOW + f"\nDone! Playlist available at:", end=" ")
         print(Fore.BLUE + playlist_URL + Style.RESET_ALL + "\n")
