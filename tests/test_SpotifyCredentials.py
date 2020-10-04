@@ -5,6 +5,7 @@ os.chdir("..")
 from src.migrations.clients.credentials.SpotifyCredentials import Credentials
 
 class TestSpotifyCredentials(unittest.TestCase):
+    """TEST SPOTIFY CREDENTIALS:"""
     @classmethod
     def setUpClass(self):
         print("\nTEST SPOTIFY CREDENTIALS:")
