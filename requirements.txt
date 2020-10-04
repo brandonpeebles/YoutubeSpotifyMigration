@@ -21,7 +21,7 @@ pyasn1==0.4.8
 pyasn1-modules==0.2.8
 pyfiglet==0.8.post1
 Pygments==2.7.1
-PyInquirer==1.0.3
+PyInquirer>=1.0.3
 pylint==2.6.0
 pytz==2020.1
 regex==2020.7.14
