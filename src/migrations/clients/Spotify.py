@@ -66,7 +66,7 @@ class Client:
         """
         print('Running manual authentication.')
         self.secrets = self._load_secrets("./spotify_client_secret.json")
-        auth_URL = self._get_auth_urL()
+        auth_URL = self._get_auth_url()
         auth_code = self._get_auth_code_from_redirectURL(auth_URL)
         creds_json = self._request_tokens(auth_code)
         return Credentials(creds_json, self._get_auth_header())
