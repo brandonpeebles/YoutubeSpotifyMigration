@@ -132,7 +132,7 @@ class Client:
             return response
 
     def get_playlist_items(self, id):    
-        """get full details of videos for a given playlist id"""    
+        """get full details of videos for a given playlist id"""
         print(f'\nFetching items from selected Youtube playlist...', end=" ")
         try: 
             request = self.client.playlistItems().list(

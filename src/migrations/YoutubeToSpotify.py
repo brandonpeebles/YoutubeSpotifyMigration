@@ -37,8 +37,7 @@ class Migrator:
         Fetch Youtube playlists for user.
         Ask them to choose one for transferring.
         """
-        playlists = self.YoutubeAPI.get_all_playlists(
-        )                         # fetch the user's playlists
+        playlists = self.YoutubeAPI.get_all_playlists()                         # fetch the user's playlists
         question = [                                                            # prompt user to select one
             {
                 'type': 'list',

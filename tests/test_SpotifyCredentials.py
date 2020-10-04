@@ -45,7 +45,8 @@ class TestSpotifyCredentials(unittest.TestCase):
 
     def test_SptCreds_validity(self):
         self.assertTrue(self.creds.valid())
-        # add test for refresh method 
+        # add test for refresh method
+
 
 if __name__ == "__main__":
-    unittest.main() 
+    unittest.main()

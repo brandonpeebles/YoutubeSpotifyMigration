@@ -23,7 +23,6 @@ def main():
 
     print_section_header("TESTING SPOTIFY CREDENTIALS", "YELLOW")
     runner.run(credentials)
-
     print_section_header("TESTING YOUTUBE TO SPOTIFY MIGRATOR", "YELLOW")
     runner.run(youtube_migrator)
 
@@ -42,11 +41,4 @@ def print_section_header(title, color):
 
 
 if __name__ == "__main__":
-    try:
-        main()
-    except Exception as err:
-        print(Fore.RED + err + Style.RESET_ALL)
-    else:
-        success_msg = (Style.BRIGHT + "SUCCESS: " +
-                       Style.NORMAL + "All tests passing" + Style.RESET_ALL)
-        print_section_header(success_msg, "GREEN")
+    main()
