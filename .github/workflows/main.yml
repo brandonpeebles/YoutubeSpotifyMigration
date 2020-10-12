@@ -1,5 +1,5 @@
 on: push
-name: tests
+name: build
 jobs:
   build:
 #     name: GitHub Action for Python unittest
