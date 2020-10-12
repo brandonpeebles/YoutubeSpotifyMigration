@@ -1,4 +1,4 @@
-[![Actions Status](https://github.com/peeblesbrandon/YoutubeSpotifyMigration/workflows/tests/badge.svg)](https://github.com/peeblesbrandon/YoutubeSpotifyMigration/actions)
+[![Actions Status](https://github.com/peeblesbrandon/YoutubeSpotifyMigration/workflows/build/badge.svg)](https://github.com/peeblesbrandon/YoutubeSpotifyMigration/actions)
 # YouTubeSpotifyMigration 🎵
 > _Transfer your playlists between YouTube and Spotify_  
 
