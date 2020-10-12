@@ -17,7 +17,7 @@ jobs:
         run: pip3 install setuptools && pip3 install -r requirements.txt
       - name: Run unit tests
         run: python3 run_tests.py
-      - name: Lint with flake8
-        run: |
-          pip3 install flake8
-          flake8 .
+#       - name: Lint with flake8
+#         run: |
+#           pip3 install flake8
+#           flake8 .
