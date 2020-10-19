@@ -250,10 +250,10 @@ class Client:
         nextURL = response['next']
         while nextURL is not None:
             nextResponse = requests.get(nextURL, headers=headers)
-            if response.status_code != 200:
-                raise RequestError(response.status_code, response.text)
+            if nextResponse.status_code != 200:
+                raise RequestError(nextResponse.status_code, nextResponse.text)
             response['items'].extend(nextResponse.json()['items'])
-            nextURL = response['next']
+            nextURL = nextResponse.json()['next']
         print(Fore.GREEN + 'Success.\n' + Style.RESET_ALL)
         return response['items']
 
@@ -276,10 +276,10 @@ class Client:
         nextURL = response['next']
         while nextURL is not None:
             nextResponse = requests.get(nextURL, headers=headers)
-            if response.status_code != 200:
-                raise RequestError(response.status_code, response.text)
+            if nextResponse.status_code != 200:
+                raise RequestError(nextResponse.status_code, nextResponse.text)
             response['items'].extend(nextResponse.json()['items'])
-            nextURL = response['next']
+            nextURL = nextResponse.json()['next']
         print(Fore.GREEN + 'Success.\n' + Style.RESET_ALL)
         return response['items']
 
